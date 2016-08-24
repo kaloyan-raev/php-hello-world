@@ -1,0 +1,82 @@
+{
+  "v": "4.0",
+  "name": "php-hello-world-factory",
+  "workspace": {
+    "environments": [
+      {
+        "name": "hello",
+        "machineConfigs": [
+          {
+            "limits": {
+              "ram": 1000
+            },
+            "name": "ws-machine",
+            "type": "docker",
+            "source": {
+              "type": "dockerfile",
+              "content": "FROM kaloyanraev/che-zendserver"
+            },
+            "dev": true,
+            "servers": [],
+            "envVariables": {},
+            "links": []
+          }
+        ]
+      }
+    ],
+    "defaultEnv": "hello",
+    "projects": [
+      {
+        "links": [],
+        "name": "php-hello-world",
+        "attributes": {
+          "contribute_to_branch": [
+            "master"
+          ]
+        },
+        "type": "blank",
+        "source": {
+          "location": "https://github.com/kaloyan-raev/php-hello-world.git",
+          "type": "git",
+          "parameters": {}
+        },
+        "path": "/php-hello-world",
+        "description": "Simple \"Hello World\" in PHP",
+        "problems": [],
+        "mixins": [
+          "pullrequest"
+        ]
+      }
+    ],
+    "name": "hello",
+    "commands": [
+      {
+        "commandLine": "echo -e \"<VirtualHost *:80>\n    DocumentRoot /projects/php-hello-world\n    <Directory /projects/php-hello-world>\n        DirectoryIndex index.php\n        AllowOverride All\n        Require all granted\n    </Directory>\n</VirtualHost>\" | sudo tee /etc/apache2/sites-available/000-default.conf && sudo sed -i 's#zray.zendserver_ui_url=#zray.zendserver_ui_url=http://${server.port.10081}/ZendServer#g' /usr/local/zend/etc/conf.d/zray.ini && sudo /usr/local/zend/bin/zendctl.sh start",
+        "name": "auto setup",
+        "attributes": {
+          "previewUrl": "http://${server.port.80}"
+        },
+        "type": "custom"
+      }
+    ],
+    "links": []
+  },
+  "ide": {
+    "onProjectsLoaded": {
+      "actions": [
+        {
+          "properties": {
+            "file": "/php-hello-world/README.md"
+          },
+          "id": "openFile"
+        },
+        {
+          "properties": {
+            "name": "auto setup"
+          },
+          "id": "runCommand"
+        }
+      ]
+    }
+  }
+}
